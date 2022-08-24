@@ -1,0 +1,281 @@
+<div class="wrapper1">
+    <div class="flex-row-space-between">
+        <div class="">
+            <span class="titre-formulaire">LISTE DES MARCHES EN ATTENTE DE FACTURATION</span>
+        </div>
+        <div class="flex-row-space-between">
+            <div class="">
+                <button mat-flat-button class="bg-secondary" (click)="refresh()">
+                    <mat-icon>refresh</mat-icon>
+                    Actualiser la liste
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="container-formulaire">
+        <div class="containner-list-element search">
+            <mat-form-field appearance="standard">
+                <mat-label>Rechercher</mat-label>
+                <input matInput (keyup)="applyFilter($event)" #input>
+            </mat-form-field>
+            <div class="mat-elevation-z8 w-inherit">
+                <table mat-table [dataSource]="listMarcheWithoutFcture" matSort>
+
+                    <!-- ID Column -->
+                    <ng-container matColumnDef="#">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-5"> # </th>
+                        <td mat-cell *matCellDef="let row, let i = index, let isOdd = odd, let isEven = even"
+                            [ngClass]="{'bg-odd' : isOdd, 'bg-even' : isEven}" class="w-5"> {{i+1}} </td>
+                    </ng-container>
+
+                    <!-- Progress Column -->
+                    <ng-container matColumnDef="code">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-10"> CODE </th>
+                        <td mat-cell *matCellDef="let row, let isOdd = odd, let isEven = even"
+                            [ngClass]="{'bg-odd' : isOdd, 'bg-even' : isEven}" class="w-10"> {{row.marche.code}} </td>
+                    </ng-container>
+
+                    <!-- Name Column -->
+                    <ng-container matColumnDef="designation">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-30"> DESIGNATION </th>
+                        <td mat-cell *matCellDef="let row, let isOdd = odd, let isEven = even"
+                            [ngClass]="{'bg-odd' : isOdd, 'bg-even' : isEven}" class="w-30"> {{row.marche.designation}}
+                        </td>
+                    </ng-container>
+
+                    <!-- Name Column -->
+                    <ng-container matColumnDef="financement">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-20"> FINANCEMENT</th>
+                        <td mat-cell *matCellDef="let row, let isOdd = odd, let isEven = even"
+                            [ngClass]="{'bg-odd' : isOdd, 'bg-even' : isEven}" class="w-20">
+                            {{row.marche.typeFinancement.type}} </td>
+                    </ng-container>
+
+                    <!-- Name Column -->
+                    <ng-container matColumnDef="montantFacturer">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-15 mat-th-right">FACTURE</th>
+                        <td mat-cell *matCellDef="let row, let isOdd = odd, let isEven = even"
+                            [ngClass]="{'bg-odd' : isOdd, 'bg-even' : isEven}" class="w-15 mat-td-right">
+                            {{numberFormat.format(row.totalFacture)}} </td>
+                    </ng-container>
+
+                    <!-- Name Column -->
+                    <ng-container matColumnDef="montantMarche">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-15 mat-th-right"> MONTANT DU
+                            MARCHE </th>
+                        <td mat-cell *matCellDef="let row, let isOdd = odd, let isEven = even"
+                            [ngClass]="{'bg-odd' : isOdd, 'bg-even' : isEven}" class="w-15 mat-td-right">
+                            {{numberFormat.format(row.marche.montantGlobal)}} </td>
+                    </ng-container>
+
+                    <!-- Action Column -->
+                    <ng-container matColumnDef="actions">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-10 mat-th-center"> ACTIONS </th>
+                        <td mat-cell *matCellDef="let row, let isOdd = odd, let isEven = even"
+                            [ngClass]="{'bg-odd' : isOdd, 'bg-even' : isEven}" class="w-10 mat-td-center">
+                            <button mat-flat-button class="bg-primary" (click)="onGenerateInvoice(row)">
+                                <mat-icon>settings</mat-icon>
+                                Générer facture
+                            </button>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                    <!-- Row shown when there is no matching data. -->
+                    <tr class="mat-row" *matNoDataRow>
+                        <td class="mat-cell" colspan="4">Pas de données contenant le mot clé "{{input.value}}"</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="titre-formulaire m-t-30">LISTE DES FACTURES</div>
+    <div class="container-formulaire">
+        <div class="containner-list-element search">
+            <mat-form-field appearance="standard">
+                <mat-label>Rechercher</mat-label>
+                <input matInput (keyup)="applyFiltersource($event)" #input>
+            </mat-form-field>
+
+            <div class="mat-elevation-z8 w-inherit">
+                <table mat-table [dataSource]="dataSource" matSort>
+
+                    <!-- ID Column -->
+                    <ng-container matColumnDef="#">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-5"> # </th>
+                        <td mat-cell *matCellDef="let row, let i = index, let isOdd = odd, let isEven = even"
+                            [ngClass]="{'bg-odd' : isOdd, 'bg-even' : isEven}" class="w-5"> {{i+1}} </td>
+                    </ng-container>
+
+                    <!-- Progress Column -->
+                    <ng-container matColumnDef="date">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-15"> DATE </th>
+                        <td mat-cell *matCellDef="let row, let isOdd = odd, let isEven = even"
+                            [ngClass]="{'bg-odd' : isOdd, 'bg-even' : isEven}" class="w-15"> {{row.dateCreated | date :
+                            'dd-MM-yyyy'}} </td>
+                    </ng-container>
+
+                    <!-- Name Column -->
+                    <ng-container matColumnDef="reference">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-10"> REFERENCE </th>
+                        <td mat-cell *matCellDef="let row, let isOdd = odd, let isEven = even"
+                            [ngClass]="{'bg-odd' : isOdd, 'bg-even' : isEven}" class="w-10"> {{row.reference}} </td>
+                    </ng-container>
+
+                    <!-- Name Column -->
+                    <ng-container matColumnDef="montant">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-15 mat-th-right"> MONTANT </th>
+                        <td mat-cell *matCellDef="let row, let isOdd = odd, let isEven = even"
+                            [ngClass]="{'bg-odd' : isOdd, 'bg-even' : isEven}" class="w-15 mat-td-right">
+                            {{numberFormat.format(row.netAPayer)}} </td>
+                    </ng-container>
+
+                    <!-- Name Column -->
+                    <ng-container matColumnDef="statut">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-15"> STATUT </th>
+                        <td mat-cell *matCellDef="let row, let isOdd = odd, let isEven = even"
+                            [ngClass]="{'bg-odd' : isOdd, 'bg-even' : isEven}" class="w-15">
+                            <span [ngClass]="{  'statut-enconstitution' : row.statut == 'NON PAYEE',
+                                                'statut-enetude' : row.statut == 'ENTIEREMENT PAYEE',
+                                                'statut-gagner' : row.statut == 'PARTIELLEMENT PAYEE'}">
+                                {{row.statut}}
+                            </span>
+                        </td>
+                    </ng-container>
+                    <!-- Name Column -->
+                    <ng-container matColumnDef="marche">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-30"> MARCHE </th>
+                        <td mat-cell *matCellDef="let row, let isOdd = odd, let isEven = even"
+                            [ngClass]="{'bg-odd' : isOdd, 'bg-even' : isEven}" class="w-30">
+                            {{row.marche.code}}-{{row.marche.designation}} </td>
+                    </ng-container>
+
+                    <!-- Action Column -->
+                    <ng-container matColumnDef="actions">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-10 mat-th-center"> ACTIONS </th>
+                        <td mat-cell *matCellDef="let row, let isOdd = odd, let isEven = even"
+                            [ngClass]="{'bg-odd' : isOdd, 'bg-even' : isEven}" class="w-10 mat-td-center">
+                            <button mat-mini-fab color="{{!row.codeMECeFDGI ? 'warn' : ''}}"
+                                [ngClass]="{'bg-03c0c8' : row.codeMECeFDGI}" (click)="downloadFile(row)">
+                                <mat-icon>print</mat-icon>
+                            </button>
+                            <button mat-mini-fab class="bg-03c0c8" (click)="openDialog(row)" *ngIf="!row.codeMECeFDGI">
+                                <mat-icon>kitchen</mat-icon>
+                            </button>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumnssource"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumnssource;"></tr>
+
+                    <!-- Row shown when there is no matching data. -->
+                    <tr class="mat-row" *matNoDataRow>
+                        <td class="mat-cell" colspan="4">Pas de données contenant le mot clé "{{input.value}}"</td>
+                    </tr>
+                </table>
+                <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users">
+                </mat-paginator>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modal-generate">
+    <div class="modal-header">
+        <mat-icon class="icon-turn">settings</mat-icon>
+        <span>Génération en cours...</span>
+    </div>
+</div>
+
+<!--Modal normalisation-->
+<div id="modal-normalise">
+    <div class="modal-header">
+        <mat-icon class="icon-turn">settings</mat-icon>
+        <span>Normalisation de la facture en cours... Veuillez patientez un instant!</span>
+    </div>
+</div>
+
+<!-- Modal option de facturations-->
+<div class="modal-generate-container">
+    <div class="modal-generate-overlay" (click)="onDisplayModal()"></div>
+    <div class="modal-generate-content">
+        <form [formGroup]="taxForm">
+            <div class="border-bottom-1px flex-grow-10 m-b-10">
+                <span class="title-modal">Génération de la facture</span>
+            </div>
+
+            <div class="p-10">
+                <p class=""> Renseignez les informations ci-dessous pour générer la facture.</p>
+                <div class="tax-container">
+                    <div class="flex-grow-10" *ngIf="currentMarche">
+                        <mat-form-field class="example-full-width flex-grow-10" appearance="outline">
+                            <mat-label>Montant de la facture</mat-label>
+                            <input matInput type="number" disabled
+                                [value]="currentMarche.marche.montantGlobal - currentMarche.totalFacture">
+                        </mat-form-field>
+                    </div>
+                    <div class="flex-grow-10" *ngIf="currentMarche">
+                        <mat-form-field class="example-full-width flex-grow-10" appearance="outline">
+                            <mat-label>Montant à facturer</mat-label>
+                            <input matInput type="number" formControlName="montantFacture" value="0"
+                                [max]="(currentMarche.marche.montantGlobal - currentMarche.totalFacture)" [min]="1">
+                        </mat-form-field>
+                        <div
+                            *ngIf="taxForm.controls['montantFacture'].invalid 
+                            && (taxForm.controls['montantFacture'].dirty || taxForm.controls['montantFacture'].touched)">
+                            <p *ngIf="taxForm.controls['montantFacture'].errors!['max']" class="color-red">
+                                Le montant de la facture ne peut être superieur au reste à facturer.
+                            </p>
+                            <p *ngIf="taxForm.controls['montantFacture'].errors!['min']" class="color-red">
+                                Le montant de la facture ne peut être inferieur ou egal à zéro (0).
+                            </p>
+                            <p *ngIf="taxForm.controls['montantFacture'].errors!['required']" class="color-red">
+                                Le montant de la facture est obligatoire.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="flex-grow-10">
+                        <mat-form-field class="example-full-width flex-grow-10" appearance="outline">
+                            <mat-label>Ajouter une remise</mat-label>
+                            <input matInput type="number" formControlName="hasRemise" value="0"
+                                [max]="(taxForm.controls['montantFacture'].value == 0 ? 0 : taxForm.controls['montantFacture'].value - 1)">
+                        </mat-form-field>
+                        <div
+                        *ngIf="taxForm.controls['hasRemise'].invalid 
+                        && (taxForm.controls['hasRemise'].dirty || taxForm.controls['hasRemise'].touched)">
+                        <p *ngIf="taxForm.controls['hasRemise'].errors!['max']" class="color-red">
+                            La remise ne peut être égale à la facture.
+                        </p>
+                    </div>
+                    </div>
+                    <div class="flex-grow-5">
+                        <mat-checkbox class="flex-grow-10" color="primary" formControlName="has_TVA">Appliquer TVA
+                        </mat-checkbox>
+                    </div>
+                    <div class="flex-grow-5">
+                        <mat-checkbox class="flex-grow-10" color="primary" formControlName="has_AIB">Appliquer AIB
+                        </mat-checkbox>
+                    </div>
+                    <div class="flex-grow-10">
+                        <mat-form-field class="example-full-width flex-grow-10" appearance="outline">
+                            <mat-label>Libellé de l'opération</mat-label>
+                            <textarea matInput class="h-40" formControlName="desgnOperation"
+                                placeholder="Tapez ici le libellé de l'opération sinon la designation du marché sera considéré par defaut"> </textarea>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+            <div class="border-top-1px flex-grow-10">
+                <div class=" btn-container-modal">
+                    <button mat-flat-button class=" flex-grow-5 bg-secondary" (click)="onDisplayModal()">Annuler
+                        l'opération</button>
+                    <button mat-flat-button color="primary" class="bg-primary flex-grow-5"
+                        (click)="generateFacture()" [disabled]="!taxForm.valid">Générer la facture</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

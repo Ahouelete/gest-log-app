@@ -1,0 +1,45 @@
+<div class="wrapper">
+    <div class="flex-row-center h-inherit margin-left-100 margin-bottom-80">
+        <div class="">
+            <div class="flex-col-center box-connexion">
+
+                <div class="flex-col-center m-b-10">
+                    <h1 class="center-content">Connexion</h1>
+                    <h5 class="justify-content color-838383">Vous voudriez bien renseigner votre nom d'utilisateur
+                        ou email comme identifiant, et votre mot de passe pour se connecter.
+                        Toutefois, si vous rencontrez des difficultés lors de votre connexion, veuillez vous
+                        rapprocher de votre administarateur systeme.
+                    </h5>
+                </div>
+                <form [formGroup]="loginForm" (ngSubmit)="signIn()">
+                    <div class="flex-col-center">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Identifiant</mat-label>
+                            <input formControlName="userNameorEmail" matInput>
+                            <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="flex-col-center">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Mot de passe</mat-label>
+                            <input formControlName="password" matInput [type]="hide ? 'password' : 'text'">
+                            <mat-icon matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+                                [attr.aria-pressed]="hide" style="cursor: pointer;">
+                                {{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+
+                        </mat-form-field>
+                    </div>
+
+                    <div class="color-white flex-col-center">
+                        <button type="submit" class="" mat-raised-button color="primary">SE CONNECTER</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="image_connexion">
+            <img src="../../../assets/img/Image_Connexion.png" alt="" height="400">
+        </div>
+    </div>
+
+</div>

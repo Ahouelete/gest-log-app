@@ -1,0 +1,482 @@
+<div class="wrapper1">
+
+    <div class="flex-row-space-between">
+        <span class="titre-formulaire"> FORMULAIRE D'ENREGISTREMENT DES DAO</span>
+        <div class="flex-row-space-between">
+            <div class="">
+                <button mat-flat-button class="bg-secondary" (click)="resetdaoForm()">
+                    <mat-icon>note_add</mat-icon>
+                    Ajouter un DAO
+                </button>
+            </div>
+            <div class="m-l-5">
+                <button mat-flat-button class="bg-primary" (click)="onSave(daoForm.value)" [disabled]="!daoForm.valid">
+                    <mat-icon>save</mat-icon>
+                    {{action == 'ON_CREATE' ? 'Enregistrer un DAO' : 'Modifer le DAO'}}
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-formulaire">
+        <mat-stepper linear="true" #stepper>
+            <mat-step label="Statut du DAO" [stepControl]="statutDaoForm">
+                <div class="container-statut-dao flex-grow-10">
+                    <div class="flex-grow-2 flex-center">
+                        <mat-icon class="{{action == 'ON_CREATE' ? 'color-statut-valide' : 
+                        (listPieceAFournir.length !== listPieceJointe.length || listPieceJointe.length == 0) ? 'color-statut-warning' : 
+                        statutDaoForm.controls['statutDao'].value.statut == 'GAGNER' ? 'color-statut-valide' : 
+                        statutDaoForm.controls['statutDao'].value.statut == 'EN COURS DE CONSTITUTION' ? 'color-statut-valide' :
+                            statutDaoForm.controls['statutDao'].value.statut=='EN COURS D\'ETUDE' ? 'color-statut-valide' :
+                            statutDaoForm.controls['statutDao'].value.statut=='ABANDON' ? 'color-statut-danger' :
+                            statutDaoForm.controls['statutDao'].value.statut=='REJETER' ? 'color-statut-danger'
+                            : 'color-statut-valide'}}">
+                            {{ action == 'ON_CREATE' ? 'create_new_folder' :
+                            (listPieceAFournir.length !== listPieceJointe.length || listPieceJointe.length == 0) ?
+                            'warning' :
+                            statutDaoForm.controls['statutDao'].value.statut == 'GAGNER' ? 'check_box' :
+                            statutDaoForm.controls['statutDao'].value.statut == "EN COURS DE CONSTITUTION" ? 'list_alt' :
+                            statutDaoForm.controls['statutDao'].value.statut == "EN COURS D'ETUDE" ? 'list_alt' :
+                            statutDaoForm.controls['statutDao'].value.statut == 'ABANDON' ? 'cancel_presentation' :
+                            statutDaoForm.controls['statutDao'].value.statut == 'REJETER' ? 'cancel_presentation' :
+                            'check_box'}}
+                        </mat-icon>
+                    </div>
+                    <div class="motif-statut-dao flex-grow-5">
+                        <p class="title-statut-dao">
+                            {{ action == 'ON_CREATE' ? 'NOUVEAU DAO' :
+                            (listPieceAFournir.length !== listPieceJointe.length || listPieceJointe.length == 0) ?
+                            'DOSSIER INCOMPLET !' :
+                            statutDaoForm.controls['statutDao'].value.statut == 'GAGNER' ? 'BRAVO, DAO GAGNE !' :
+                            statutDaoForm.controls['statutDao'].value.statut == "EN COURS DE CONSTITUTION" ? ' DAO EN COURS DE CONSTITUTION' :
+                            statutDaoForm.controls['statutDao'].value.statut == "EN COURS D'ETUDE" ? 'DAO EN COURS D\'ETUDE' :
+                            statutDaoForm.controls['statutDao'].value.statut == 'ABANDON' ? 'DAO ABANDONNE' :
+                            statutDaoForm.controls['statutDao'].value.statut == 'REJETER' ? 'DAO REJETE' :
+                            'DAO DEPOSE'}}
+                        </p>
+                        <div class="contenu-statut-dao">
+                            <p>{{(listPieceAFournir.length !== listPieceJointe.length) ?
+                                "CERTAINES PIECES N'ONT PAS ETE AJOUTEES AU DOSSIER" :
+                                "AUCUNE PIECE N'EST REQUISE POUR CONSTITUER CE DOSSIER"}}
+                            </p>
+                        </div>
+                        <div class="flex-grow-9 container-jauge-dao">
+                            <div id="contain-without-piece" class="jauge-without-piece"></div>
+                            <div id="contain-with-piece" class="jauge-with-piece"></div>
+                        </div>
+                    </div>
+                    <div class="flex-grow-3">
+                        <form [formGroup]="statutDaoForm">
+                            <div class="flex-grow-10">
+                                <mat-form-field appearance="outline" class="flex-grow-10">
+                                    <mat-label>Statut DAO</mat-label>
+                                    <mat-select [compareWith]="compareFn" formControlName="statutDao">
+                                        <mat-option *ngFor="let statut of listStatutDAO" [value]="statut">
+                                            {{statut.statut}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="flex-grow-10">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Date dépôt</mat-label>
+                                    <input matInput [matDatepicker]="picker1" formControlName="dateDepot">
+                                    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                                    <mat-datepicker #picker1></mat-datepicker>
+                                </mat-form-field>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div>
+                    <button mat-flat-button class="bg-primary" matStepperNext>Suivant</button>
+                </div>
+            </mat-step>
+            <mat-step label="Renseignez les informations du DAO" state="phone" [stepControl]="daoForm">
+                <form [formGroup]="daoForm">
+                    <div class="containner-input">
+                        <!-- Alert apres soumission-->
+                        <app-alert [typeAlert]=typeMsg [msgAlert]=msg class="w-inherit" *ngIf="typeMsg"></app-alert>
+                        <div class="flex-grow-3">
+                            <mat-form-field appearance="outline" class="flex-grow-10">
+                                <mat-label>Choisir client</mat-label>
+                                <mat-select formControlName="tiers" [compareWith]="compareFn">
+                                    <mat-option *ngFor="let tier of listClient" [value]="tier">
+                                        {{tier.numero}} - {{tier.intitule}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="flex-grow-2">
+                            <mat-form-field appearance="outline" class="flex-grow-10">
+                                <mat-label>Entrer code du DAO</mat-label>
+                                <input matInput formControlName="code" oninput="this.value = this.value.toUpperCase()">
+                            </mat-form-field>
+                        </div>
+                        <div class="flex-grow-5">
+                            <mat-form-field appearance="outline" class="flex-grow-10">
+                                <mat-label>Entrer désignation du DAO</mat-label>
+                                <input matInput formControlName="designation"
+                                    oninput="this.value = this.value.toUpperCase()">
+                            </mat-form-field>
+                        </div>
+                        <div class="flex-grow-2">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Date annonce</mat-label>
+                                <input matInput [matDatepicker]="picker" formControlName="dateAnnonce">
+                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                <mat-datepicker #picker></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                        <div class="flex-grow-6">
+                            <mat-form-field appearance="outline" class="flex-grow-10">
+                                <mat-label>Soumissionnaire</mat-label>
+                                <input matInput formControlName="soumissionnaire"
+                                    oninput="this.value = this.value.toUpperCase()">
+                            </mat-form-field>
+                        </div>
+                        <div class="flex-grow-2">
+                            <mat-form-field appearance="outline" class="flex-grow-10">
+                                <mat-label>Montant offre</mat-label>
+                                <input matInput formControlName="montantOffre"
+                                    oninput="this.value = this.value.toUpperCase()">
+                            </mat-form-field>
+                        </div>
+                        <div class="flex-grow-2">
+                            <mat-form-field appearance="outline" class="flex-grow-10">
+                                <mat-label>Montant validé</mat-label>
+                                <input matInput formControlName="montantAccepte"
+                                    oninput="this.value = this.value.toUpperCase()">
+                            </mat-form-field>
+                        </div>
+                        <div class="flex-grow-3">
+                            <mat-form-field class="example-full-width flex-grow-10" appearance="outline">
+                                <mat-label>Motif</mat-label>
+                                <textarea matInput placeholder="Tapez ici vos commentaires..."
+                                    oninput="this.value = this.value.toUpperCase()" formControlName="motif"></textarea>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div>
+                        <button mat-flat-button class="bg-secondary m-r-10" matStepperPrevious>Précédent</button>
+                        <button mat-flat-button class="bg-primary" matStepperNext>Suivant</button>
+                    </div>
+                </form>
+            </mat-step>
+
+            <mat-step label="Pièces à fournir" state="chat">
+                <!-- AJOUTER LES PIECES A FOURNIR -->
+
+                <div class="container-piece-a-fournir">
+                    <div class="item-piece flex-grow-5" *ngFor="let piece of listPieceAFournir, let i = index">
+                        <div class="numerotation-piece">
+                            <span>{{i+1}}</span>
+                        </div>
+                        <div class="valeur-item">
+                            <mat-icon>attach_file</mat-icon>
+                            <span> {{piece.pieceAFournir.code}} - {{piece.pieceAFournir.designation}}</span>
+                            <span> ({{piece.estObligatoire ? 'Oblig' : 'Facult'}})</span>
+                            <span> {{piece.quantite}} copie(s)</span>
+                        </div>
+                        <button class="delete-btn-piece" (click)="deleteItem(i)">
+                            <mat-icon>delete_outline</mat-icon>
+                        </button>
+                    </div>
+                    <div class="btn-add-piece flex-grow-5">
+                        <button class="btn-add-piece-a-fournir" (click)="onpenFormPieceDao()">
+                            <mat-icon>playlist_add</mat-icon>
+                            <span>Ajouter une nouvelle pièce</span>
+                        </button>
+                    </div>
+                </div>
+                <div>
+                    <button mat-flat-button class="bg-secondary m-r-10" matStepperPrevious>Précédent</button>
+                    <button mat-flat-button class="bg-primary" matStepperNext>Suivant</button>
+                </div>
+            </mat-step>
+
+            <mat-step label="Consititution des pièces">
+                <div class="container-piece-a-fournir">
+                    <div class="p-2 flex-grow-3 flex-row-space-between"
+                        *ngFor="let piece of listPieceJointe, let i = index">
+                        <div class="item-piece-jointe flex-grow-10">
+                            <div class="numerotation-piece-jointe">
+                                <span> Pièce fournie N°{{i+1}}</span>
+                            </div>
+                            <div class="valeur-item">
+                                <span>
+                                    {{piece.piece.code}} -
+                                    {{piece.piece.designation.length < 27 ? piece.piece.designation :
+                                        (piece.piece.designation.substr(0,27) + '...' ) }}</span>
+                            </div>
+                            <div>
+                                <span class="m-l-6 color-blue"> Pièce(s)
+                                    <span class="">{{piece.estObligatoire ? 'obligatoire(s)' :
+                                        'facultative(s)'}},</span>
+                                </span>
+                                <span class="color-blue"> {{piece.nbCopie}} copie(s)</span>
+                            </div>
+                            <div>
+                                <button class="delete-btn-piece p-0" (click)="deleteItemPieceJointe(i)">
+                                    <mat-icon>delete_outline</mat-icon>
+                                </button>
+                                <button class="donwload-btn-piece p-0" (click)="downloadPiece(piece.pieceJointe)"
+                                    *ngIf="piece.pieceJointe">
+                                    <mat-icon>get_app</mat-icon>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="btn-add-piece flex-grow-3">
+                        <button class="btn-add-piece-jointe" (click)="onpenFormPieceDaoPieceJointe()">
+                            <mat-icon>playlist_add</mat-icon>
+                            <span>Ajouter une pièce jointe</span>
+                        </button>
+                    </div>
+                </div>
+                <div>
+                    <button mat-flat-button class="bg-secondary m-r-10" matStepperPrevious>Précédent</button>
+                </div>
+            </mat-step>
+            <!-- Icon overrides. -->
+            <ng-template matStepperIcon="phone">
+                <mat-icon>call_end</mat-icon>
+            </ng-template>
+            <ng-template matStepperIcon="chat">
+                <mat-icon>forum</mat-icon>
+            </ng-template>
+        </mat-stepper>
+    </div>
+    <div class="titre-formulaire m-t-30">LISTE DES DAO</div>
+    <div class="container-formulaire">
+        <div class="containner-list-element search">
+            <mat-form-field appearance="standard">
+                <mat-label>Rechercher</mat-label>
+                <input matInput (keyup)="applyFilter($event)" #input>
+            </mat-form-field>
+
+            <div class="mat-elevation-z8 w-inherit">
+                <table mat-table [dataSource]="dataSource" matSort>
+
+                    <!-- ID Column -->
+                    <ng-container matColumnDef="#">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-5"> # </th>
+                        <td mat-cell *matCellDef="let row, let i = index, let isOdd = odd, let isEven = even"
+                            [ngClass]="{'bg-odd' : isOdd, 'bg-even' : isEven}" class="w-5"> {{i+1}} </td>
+                    </ng-container>
+
+                    <!-- Progress Column -->
+                    <ng-container matColumnDef="code">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-10"> CODE </th>
+                        <td mat-cell *matCellDef="let row, let isOdd = odd, let isEven = even"
+                            [ngClass]="{'bg-odd' : isOdd, 'bg-even' : isEven}" class="w-10"> {{row.code}} </td>
+                    </ng-container>
+
+                    <!-- Name Column -->
+                    <ng-container matColumnDef="designation">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-30"> DESIGNATION </th>
+                        <td mat-cell *matCellDef="let row, let isOdd = odd, let isEven = even"
+                            [ngClass]="{'bg-odd' : isOdd, 'bg-even' : isEven}" class="w-30"> {{row.designation}} </td>
+                    </ng-container>
+
+                    <!-- Name Column -->
+                    <ng-container matColumnDef="dateAnnonce">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-10"> DATE ANNONCE </th>
+                        <td mat-cell *matCellDef="let row, let isOdd = odd, let isEven = even"
+                            [ngClass]="{'bg-odd' : isOdd, 'bg-even' : isEven}" class="w-10"> {{row.dateAnnonce | date:
+                            'dd-MM-yyyy'}} </td>
+                    </ng-container>
+
+                    <!-- Name Column -->
+                    <ng-container matColumnDef="montantOffre">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="mat-th-right w-15"> MONTANT OFFRE
+                        </th>
+                        <td mat-cell *matCellDef="let row, let isOdd = odd, let isEven = even"
+                            [ngClass]="{'bg-odd' : isOdd, 'bg-even' : isEven}" class="mat-td-right w-15">
+                            {{numberFormat.format(row.montantOffre)}} </td>
+                    </ng-container>
+
+                    <!-- Name Column -->
+                    <ng-container matColumnDef="statutDao">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-20"> STATUT </th>
+                        <td mat-cell *matCellDef="let row, let isOdd = odd, let isEven = even"
+                            [ngClass]="{'bg-odd' : isOdd, 'bg-even' : isEven}" class="w-20">
+                            <span [ngClass]="{'statut-abandon' : row.statutDao.statut == 'ABANDON',
+                                                'statut-deposer' : row.statutDao.statut == 'DEPOSER',
+                                                'statut-enconstitution' : row.statutDao.statut == 'EN COURS DE CONSTITUTION',
+                                                'statut-enetude' : row.statutDao.statut == 'EN COURS D\'ETUDE',
+                                                'statut-gagner' : row.statutDao.statut == 'GAGNER',
+                                                'statut-rejeter' : row.statutDao.statut == 'REJETER'}">
+                                {{row.statutDao.statut}}
+                            </span>
+                        </td>
+                    </ng-container>
+
+                    <!-- Action Column -->
+                    <ng-container matColumnDef="actions">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-10 mat-th-center"> ACTIONS </th>
+                        <td mat-cell *matCellDef="let row, let isOdd = odd, let isEven = even"
+                            [ngClass]="{'bg-odd' : isOdd, 'bg-even' : isEven}" class="w-10 mat-td-center">
+                            <button mat-mini-fab class="bg-03c0c8" (click)="onUpdate(row)">
+                                <mat-icon>create</mat-icon>
+                            </button>
+                            <button mat-mini-fab color="warn" (click)="openDialog(row)">
+                                <mat-icon>delete</mat-icon>
+                            </button>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                    <!-- Row shown when there is no matching data. -->
+                    <tr class="mat-row" *matNoDataRow>
+                        <td class="mat-cell" colspan="4">Pas de données contenant le mot clé "{{input.value}}"</td>
+                    </tr>
+                </table>
+                <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"></mat-paginator>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Modal pour ajouter une piece a founir-->
+<div class="modal-generate-container">
+    <div class="modal-generate-overlay" (click)="onDisplayModal()"></div>
+    <div class="modal-generate-content">
+        <form [formGroup]="pieceDaoForm">
+            <div class="border-bottom-1px flex-grow-10 m-b-10">
+                <span class="title-modal">AJOUTER UNE PIECE A FOURNIR POUR CE DAO</span>
+            </div>
+            <div class="p-10">
+                <p class=""> Renseignez les informations ci-dessous pour ajouter une nouvelle pièce</p>
+                <div class="tax-container">
+                    <div class="flex-grow-10">
+                        <mat-form-field appearance="outline" class="flex-grow-10">
+                            <mat-label>Pièce à fournir</mat-label>
+                            <mat-select formControlName="pieceAFournir" [compareWith]="compareFn">
+                                <mat-option *ngFor="let piece of listPieceDisponible" [value]="piece">
+                                    {{piece.code}} - {{piece.designation}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="flex-grow-5">
+                        <mat-checkbox class="flex-grow-10" color="primary" formControlName="estObligatoire">
+                            Cette pièce est obligatoire
+                        </mat-checkbox>
+                    </div>
+                    <div class="flex-grow-10">
+                        <mat-form-field class="example-full-width flex-grow-10" appearance="outline">
+                            <mat-label>Nombre d'exemplaire</mat-label>
+                            <input matInput type="number" formControlName="quantite">
+                        </mat-form-field>
+                    </div>
+                    <div class="flex-grow-10">
+                        <mat-form-field class="example-full-width flex-grow-10" appearance="outline">
+                            <mat-label>Autres informations</mat-label>
+                            <input matInput type="text" formControlName="autresInfos">
+                        </mat-form-field>
+                        <div *ngIf="pieceDaoForm.controls['autresInfos'].invalid && 
+                        (pieceDaoForm.controls['autresInfos'].touched || pieceDaoForm.controls['autresInfos'].dirty)">
+                        <p *ngIf="pieceDaoForm.controls['autresInfos'].errors!['maxlength']" class="color-red">
+                            Ce champs ne peut excéder 100 caractères.
+                        </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="border-top-1px flex-grow-10">
+                <div class=" btn-container-modal">
+                    <button mat-flat-button class=" flex-grow-5 bg-secondary" (click)="onDisplayModal()">
+                        Fermer
+                    </button>
+                    <button mat-flat-button color="primary" class="bg-primary flex-grow-5" (click)="addPieceDao()"
+                        [disabled]="!pieceDaoForm.valid">
+                        Ajouter la pièce
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal pour ajouter une pièce jointe-->
+<div class="modal-generate-container">
+    <div class="modal-piece-jointe-overlay" (click)="onDisplayModalPieceJointe()"></div>
+    <div class="modal-piece-jointe-content bg-modalpiece-jointe">
+        <form [formGroup]="pieceJointeForm">
+            <div class="border-bottom-1px flex-grow-10 m-b-10">
+                <span class="title-modal color-title-piece-jointe">
+                    <mat-icon> attach_file</mat-icon>
+                    AJOUTER UNE PIECE JOINTE POUR CONSTITUER CE DAO
+                </span>
+            </div>
+            <div class="p-10">
+                <p class=""> Renseignez les informations ci-dessous pour ajouter une pièce jointe</p>
+                <div class="tax-container">
+                    <div class="flex-grow-10">
+                        <mat-form-field appearance="outline" class="flex-grow-10">
+                            <mat-label>Pièce à constituer</mat-label>
+                            <mat-select formControlName="piece" [compareWith]="compareFn">
+                                <mat-option *ngFor="let piece of listPieceAJoindre" [value]="piece.pieceAFournir"
+                                    (onSelectionChange)="this.pieceJointeForm.controls.estObligatoire.setValue(piece.estObligatoire); 
+                                    this.pieceJointeForm.controls.nbCopie.setValue(piece.quantite);
+                                    this.pieceJointeForm.controls.autresInfos.setValue(piece.autresInfos);">
+                                    {{piece.pieceAFournir.code}} - {{piece.pieceAFournir.designation}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="flex-grow-5">
+                        <mat-checkbox class="flex-grow-10" color="primary" formControlName="estObligatoire">
+                            Cette pièce est obligatoire
+                        </mat-checkbox>
+                    </div>
+                    <div class="flex-grow-10">
+                        <mat-form-field class="example-full-width flex-grow-10" appearance="outline">
+                            <mat-label>Nombre d'exemplaire</mat-label>
+                            <input matInput type="number" formControlName="nbCopie">
+                        </mat-form-field>
+                    </div>
+                    <div class="flex-grow-10">
+                        <mat-form-field class="example-full-width flex-grow-10" appearance="outline">
+                            <mat-label>Autres informations </mat-label>
+                            <input matInput type="text" formControlName="autresInfos">
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="flex-grow-10">
+                    <p>Pièce jointe</p>
+                    <div class="container-piece-jointe">
+                        <button mat-flat-button class="bg-secondary h-40 m-5" (click)="openFolder()">
+                            Joindre une piéce (.jpg/.pdf/.png)
+                        </button>
+                        <input type="file" style="display:none" id="input-piece-file" (change)="fileChoose($event)"
+                            accept=".jpg" />
+                        <div class="flex-grow-5 m-5" *ngIf="fileName">
+                            <span>Nom du fichier : <span class="color-blue">{{fileName}}</span></span>
+                        </div>
+                        <div class="flex-grow-5 m-5" *ngIf="fileSize">
+                            <span>Taille du fichier : <span class="color-blue">{{fileSize}}</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="border-top-1px flex-grow-10">
+                <div class=" btn-container-modal">
+                    <button mat-flat-button class=" flex-grow-5 bg-secondary" (click)="onDisplayModalPieceJointe()">
+                        Fermer
+                    </button>
+                    <button mat-flat-button color="primary" class="bg-primary flex-grow-5" (click)="addPieceDaoJointe()"
+                        [disabled]="!pieceJointeForm.valid">
+                        Ajouter la pièce
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

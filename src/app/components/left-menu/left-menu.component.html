@@ -1,0 +1,153 @@
+<div class="box-menu" *ngIf="isConnected">
+
+
+   <!--  <div class="flex-row-center m-t-30 m-b-20">
+        <div class="round_profil">{{firstCharact}}</div>
+        <div class="beatrix-version">
+            <div class="">
+                <img src="../../../assets/img/logoBeatix.png" alt="" height="35" width="60">
+            </div>
+            <div class="version-beatrix">
+                <span>Version 1.0.1</span>
+            </div>
+        </div>
+    </div> -->
+    <div class="menu-principal m-t-30 m-b-20">
+        <mat-icon class="name_menu">menu</mat-icon>
+        <span class="name_menu">MENU</span>
+    </div>
+
+    <div class="scroll-bar w-inherit container-groupe-menu">
+        <div class="group-menu">
+            <ul class="items-group">
+                <li>
+                    <a routerLink="/dashboard" routerLinkActive="lien-active">
+                        <mat-icon class="m-r-10">bar_chart</mat-icon>
+                        Tableau de bord
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="group-menu">
+            <div class="name-of-group" (click)="first_group_items = !first_group_items">
+                <span class="icon-groupe">{{first_group_items? '-' : '+'}}</span>
+                <span class="titre-groupe">GESTION DES ARTICLES</span>
+            </div>
+
+            <ul class="items-group" *ngIf="first_group_items">
+                <li>
+                    <a routerLink="/famille-article" routerLinkActive="lien-active">
+                        <mat-icon class="m-r-10">select_all</mat-icon>
+                        Famille d'article
+                    </a>
+                </li>
+                <li>
+                    <a routerLink="/categorie-article" routerLinkActive="lien-active">
+                        <mat-icon class="m-r-10">business</mat-icon>
+                        Categorie d'article
+                    </a>
+                </li>
+                <li>
+                    <a>
+                        <mat-icon class="m-r-10">art_track</mat-icon>
+                        Article
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="group-menu">
+            <div class="name-of-group" (click)="second_group_items = !second_group_items">
+                <span class="icon-groupe">{{second_group_items? '-' : '+'}}</span>
+                <span class="titre-groupe">GESTION DES TIERS</span>
+            </div>
+
+            <ul class="items-group" *ngIf="second_group_items">
+                <li>
+                    <a routerLink="/fournisseur" routerLinkActive="lien-active">
+                        <mat-icon class="m-r-10">people_outline</mat-icon>
+                        Fournisseurs
+                    </a>
+                </li>
+                <li>
+                    <a routerLink="/client" routerLinkActive="lien-active">
+                        <mat-icon class="m-r-10">people</mat-icon>
+                        Clients
+                    </a>
+                </li>
+                <li>
+                    <a  routerLink="/sous-traitant" routerLinkActive="lien-active">
+                        <mat-icon class="m-r-10">folder_shared</mat-icon>
+                        Sous traitants
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="group-menu">
+            <div class="name-of-group" (click)="third_group_items = !third_group_items">
+                <span class="icon-groupe">{{third_group_items? '-' : '+'}}</span>
+                <span class="titre-groupe">GESTION DES MARCHES</span>
+            </div>
+
+            <ul class="items-group" *ngIf="third_group_items">
+                <li>
+                    <a routerLink="/dao" routerLinkActive="lien-active">
+                        <mat-icon class="m-r-10">people_outline</mat-icon>
+                        Dao
+                    </a>
+                </li>
+                <li>
+                    <a routerLink="/marche" routerLinkActive="lien-active">
+                        <mat-icon class="m-r-10">people</mat-icon>
+                        Marché
+                    </a>
+                </li>
+                <li>
+                    <a routerLink="/avance-pour-marche" routerLinkActive="lien-active">
+                        <mat-icon class="m-r-10">folder_shared</mat-icon>
+                        Avances sur marché percues 
+                    </a>
+                </li>
+                <li>
+                    <a routerLink="/list-facture-marche" routerLinkActive="lien-active">
+                        <mat-icon class="m-r-10">folder_shared</mat-icon>
+                        Factures des marchés
+                    </a>
+                </li>
+                <li>
+                    <a routerLink="/list-reglement-facture-marche" routerLinkActive="lien-active">
+                        <mat-icon class="m-r-10">folder_shared</mat-icon>
+                        Règlements des factures
+                    </a>
+                </li>
+                <li>
+                    <a routerLink="/chantier" routerLinkActive="lien-active">
+                        <mat-icon class="m-r-10">hot_tub</mat-icon>
+                        Chantiers
+                    </a>
+                </li>
+                <li>
+                    <a routerLink="/contrat-sous-traitant" routerLinkActive="lien-active">
+                        <mat-icon class="m-r-10">kitchen</mat-icon>
+                        Contrat des sous-traitants
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="group-menu">
+            <div class="name-of-group" (click)="four_group_items = !four_group_items">
+                <span class="icon-groupe">{{four_group_items? '-' : '+'}}</span>
+                <span class="titre-groupe">PARAMETRES</span>
+            </div>
+
+            <ul class="items-group" *ngIf="four_group_items">
+                <li>
+                    <a routerLink="/parametre-societe" routerLinkActive="lien-active">
+                        <mat-icon>settings</mat-icon>
+                        Paramètre société
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+</div>

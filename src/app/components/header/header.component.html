@@ -1,0 +1,93 @@
+<div class="menu">
+    <div class="left_cross_menu">
+        <div class="">
+            <img src="../../../assets/img/logoBeatix.png" alt="" height="50" width="90">
+        </div>
+        <li class="m-l-50 lien-nav">
+            <a routerLink="" class="flex-row-center">
+                <mat-icon>home</mat-icon>
+                <span>A PROPOS</span>
+            </a>
+        </li>
+        <li class="m-l-50 lien-nav">
+            <a routerLink="" class="flex-row-center">
+                <mat-icon>chrome_reader_mode</mat-icon>
+                <span>NOS SERVICES</span>
+            </a>
+        </li>
+        <li class="m-l-50 lien-nav">
+            <a routerLink="" class="flex-row-center">
+                <mat-icon>library_books</mat-icon>
+                <span>DOCUMENTATION</span>
+            </a>
+        </li>
+        <li class="m-l-50 lien-nav">
+            <a routerLink="" class="flex-row-center">
+                <mat-icon>perm_phone_msg</mat-icon>
+                <span>NOUS CONTACTER</span>
+            </a>
+        </li>
+    </div>
+
+    <div class="right_cross_menu">
+        <div class="flex-row-space-between" *ngIf="isConnected">
+            <img src="../../../assets/img/varun.jpg" alt="" class="user-connect">
+            <div class="user-info">
+                <a class="user-info cursor-pointer" (click)="openModal()">
+                    {{user.nom}} {{user.prenoms}}
+                    <span class="caret"></span>
+                </a>
+                <div class="modal-content">
+                    <p class="flex-grow-10 text-align-center font-weight-600 m-t-20">
+                        {{user.userName}}
+                    </p>
+
+                    <div class="flex-col">
+                        <a class="text-align-right flex-grow-10" style="color: white !important;" routerLink="/profil"
+                            (click)="openModal()">
+                            <mat-icon>edit</mat-icon>
+                        </a>
+                        <img src="../../../assets/img/varun.jpg" alt="" class="align-self-col-center m-t--30">
+                    </div>
+                    <div class="align-self-col-center m-t-10 color-7d7d7d">
+                        <div class="text-align-center">
+                            <span>
+                                {{user.prenoms}} {{user.nom}}
+                            </span>
+                        </div>
+                        <div class="text-align-center" *ngIf="user.email"><span> {{user.email}}</span></div>
+                    </div>
+                    <div class="flex-grow-10 m-t-20">
+                        <div class="role-content">
+                            <p>Role utilisateur</p>
+                            <div class="bg-role">{{user.role == 'ADMIN' ? 'Administrateur' : 'Utilisateur'}}</div>
+                        </div>
+                    </div>
+                    <div class="flex-col flex-grow-10 color-7d7d7d">
+                        <a class="flex-row m-t-20 cursor-pointer text-decoration-none color-7d7d7d" routerLink="/profil"
+                            (click)="openModal()">
+                            <mat-icon class="m-r-10"> person_pin</mat-icon>
+                            <span>Gérer votre compte</span>
+                        </a>
+                        <a class="flex-row m-t-10 cursor-pointer">
+                            <mat-icon class="m-r-10">sync_problem</mat-icon>
+                            <span>Réinitialiser mot de passe</span>
+                        </a>
+                        <a class="flex-row m-t-10 cursor-pointer" (click)="signOut()">
+                            <mat-icon class="m-r-10">input</mat-icon>
+                            <span>Déconnexion</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="" *ngIf="!isConnected">
+            <button mat-flat-button color="primary" routerLink="/login">SE CONNECTER</button>
+        </div>
+    </div>
+</div>
+
+<div class="box-modal" (click)="openModal()">
+
+</div>
+<!-- Modal profil-->

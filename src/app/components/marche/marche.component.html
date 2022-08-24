@@ -1,0 +1,256 @@
+<div class="wrapper1">
+
+    <div class="flex-row-space-between">
+        <span class="titre-formulaire"> FORMULAIRE D'ENREGISTREMENT DES MARCHES</span>
+        <div class="flex-row-space-between">
+            <div class="">
+                <button mat-flat-button class="bg-secondary" (click)="resetmarcheForm()">
+                    <mat-icon>note_add</mat-icon>
+                    Ajouter un marché
+                </button>
+            </div>
+            <div class="m-l-5">
+                <button mat-flat-button class="bg-primary" (click)="onSave(marcheForm.value)" [disabled]="!marcheForm.valid">
+                    <mat-icon>save</mat-icon>
+                    {{action == 'ON_CREATE' ? 'Enregistrer un marché' : 'Modifer le marché'}}
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <form [formGroup]="marcheForm" class="container-formulaire">
+        <!-- Les champs pour le formulaire-->
+        <div class="containner-input">
+            <!-- Alert apres soumission-->
+            <app-alert [typeAlert]=typeMsg [msgAlert]=msg class="w-inherit" *ngIf="typeMsg"></app-alert>
+            <div class="flex-grow-2">
+                <mat-form-field appearance="outline" class="flex-grow-10">
+                    <mat-label>DAO</mat-label>
+                    <mat-select formControlName="dao" [compareWith]="compareFn" (selectionChange)="onChangeValue()">
+                      <mat-option *ngFor="let dao of daos" [value]="dao" >
+                        {{dao.code}} - {{dao.designation}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+            </div>
+            <div class="flex-grow-2">
+                <mat-form-field appearance="outline" class="flex-grow-10">
+                    <mat-label>Montant du marché</mat-label>
+                    <input matInput formControlName="montantGlobal" 
+                           oninput="this.value = this.value.toUpperCase()" readonly>
+                </mat-form-field>
+            </div>
+            <div class="flex-grow-2">
+                <mat-form-field appearance="outline" class="flex-grow-10">
+                    <mat-label>Entrer code du marché</mat-label>
+                    <input matInput formControlName="code" oninput="this.value = this.value.toUpperCase()">
+                </mat-form-field>
+            </div>
+            <div class="flex-grow-4">
+                <mat-form-field appearance="outline" class="flex-grow-10">
+                    <mat-label>Entrer désignation du marché</mat-label>
+                    <input matInput formControlName="designation" oninput="this.value = this.value.toUpperCase()">
+                </mat-form-field>
+            </div>
+           
+            <div class="flex-grow-4">
+                <mat-form-field appearance="outline" class="flex-grow-10">
+                    <mat-label>Maitre d'ouvrage</mat-label>
+                    <input matInput formControlName="maitreOuvrage" oninput="this.value = this.value.toUpperCase()">
+                </mat-form-field>
+            </div>
+            <div class="flex-grow-6">
+                <mat-form-field appearance="outline" class="flex-grow-10">
+                    <mat-label>Travaux</mat-label>
+                    <input matInput formControlName="travaux" oninput="this.value = this.value.toUpperCase()">
+                </mat-form-field>
+            </div>
+            <div class="flex-grow-6">
+                <mat-form-field appearance="outline" class="flex-grow-10">
+                    <mat-label>Bailleur N°1</mat-label>
+                    <input matInput formControlName="bailleur1" oninput="this.value = this.value.toUpperCase()">
+                </mat-form-field>
+            </div>
+            <div class="flex-grow-2">
+                <mat-form-field appearance="outline" class="flex-grow-10">
+                    <mat-label>Taux Bailleur N°1</mat-label>
+                    <input matInput formControlName="tauxBailleur1" oninput="this.value = this.value.toUpperCase()" type="number">
+                </mat-form-field>
+            </div>
+            <div class="flex-grow-2">
+                <mat-form-field appearance="outline" class="flex-grow-10">
+                    <mat-label>Montant Bailleur N°1</mat-label>
+                    <input matInput formControlName="montantBailleur1" oninput="this.value = this.value.toUpperCase()" type="number">
+                </mat-form-field>
+            </div>
+            <div class="flex-grow-6">
+                <mat-form-field appearance="outline" class="flex-grow-10">
+                    <mat-label>Bailleur N°2</mat-label>
+                    <input matInput formControlName="bailleur2" oninput="this.value = this.value.toUpperCase()">
+                </mat-form-field>
+            </div>
+            <div class="flex-grow-2">
+                <mat-form-field appearance="outline" class="flex-grow-10">
+                    <mat-label>Taux Bailleur N°2</mat-label>
+                    <input matInput formControlName="tauxBailleur2" oninput="this.value = this.value.toUpperCase()" type="number">
+                </mat-form-field>
+            </div>
+            <div class="flex-grow-2">
+                <mat-form-field appearance="outline" class="flex-grow-10">
+                    <mat-label>Montant Bailleur N°2</mat-label>
+                    <input matInput formControlName="montantBailleur2" oninput="this.value = this.value.toUpperCase()" type="number">
+                </mat-form-field>
+            </div>
+            <div class="flex-grow-6">
+                <mat-form-field appearance="outline" class="flex-grow-10">
+                    <mat-label>Bailleur N°3</mat-label>
+                    <input matInput formControlName="bailleur3" oninput="this.value = this.value.toUpperCase()">
+                </mat-form-field>
+            </div>
+            <div class="flex-grow-2">
+                <mat-form-field appearance="outline" class="flex-grow-10">
+                    <mat-label>Taux Bailleur N°3</mat-label>
+                    <input matInput formControlName="tauxBailleur3" oninput="this.value = this.value.toUpperCase()" type="number">
+                </mat-form-field>
+            </div>
+            <div class="flex-grow-2">
+                <mat-form-field appearance="outline" class="flex-grow-10">
+                    <mat-label>Montant Bailleur N°3</mat-label>
+                    <input matInput formControlName="montantBailleur3" oninput="this.value = this.value.toUpperCase()" type="number">
+                </mat-form-field>
+            </div>
+            
+            <div class="flex-grow-3">
+                <mat-form-field appearance="outline" class="flex-grow-10">
+                    <mat-label>Type Financement</mat-label>
+                    <mat-select formControlName="typeFinancement" [compareWith]="compareFn">
+                      <mat-option *ngFor="let typeFinancement of typeFinancements" [value]="typeFinancement">
+                        {{typeFinancement.type}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+            </div>
+            <div class="flex-grow-3">
+                <mat-form-field appearance="outline" class="flex-grow-10">
+                    <mat-label>Statut du marché</mat-label>
+                    <mat-select formControlName="statutMarche" [compareWith]="compareFn">
+                      <mat-option *ngFor="let statutMarche of statutMarches" [value]="statutMarche">
+                        {{statutMarche.statut}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+            </div>
+            
+            <div class="flex-grow-2">
+                <mat-form-field appearance="outline" class="flex-grow-10">
+                    <mat-label>Taux de réalisation</mat-label>
+                    <input matInput formControlName="tauxRealisation" oninput="this.value = this.value.toUpperCase()" type="input">
+                </mat-form-field>
+            </div>
+            <div class="flex-grow-2">
+                <mat-form-field appearance="outline" class="flex-grow-10">
+                    <mat-label>Montant Facture</mat-label>
+                    <input matInput formControlName="montantFacture" 
+                           oninput="this.value = this.value.toUpperCase()" readonly>
+                </mat-form-field>
+            </div>
+            <div class="flex-grow-2">
+                <mat-form-field appearance="outline" class="flex-grow-10">
+                    <mat-label>Montant Payer</mat-label>
+                    <input matInput formControlName="montantPayer" oninput="this.value = this.value.toUpperCase()" readonly>
+                </mat-form-field>
+            </div>
+            <div class="flex-grow-2">
+                <mat-form-field appearance="outline" class="flex-grow-10">
+                    <mat-label>Reste à Payer</mat-label>
+                    <input matInput formControlName="resteAPayer" oninput="this.value = this.value.toUpperCase()" readonly>
+                </mat-form-field>
+            </div>
+        </div>
+    </form>
+    <div class="titre-formulaire m-t-30">LISTE DES MARCHES</div>
+    <div class="container-formulaire">
+        <div class="containner-list-element search">
+            <mat-form-field appearance="standard">
+                <mat-label>Rechercher</mat-label>
+                <input matInput (keyup)="applyFilter($event)" #input>
+            </mat-form-field>
+
+            <div class="mat-elevation-z8 w-inherit">
+                <table mat-table [dataSource]="dataSource" matSort>
+
+                    <!-- ID Column -->
+                    <ng-container matColumnDef="#">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-5"> # </th>
+                        <td mat-cell *matCellDef="let row, let i = index, let isOdd = odd, let isEven = even"
+                        [ngClass]="{'bg-odd' : isOdd, 'bg-even' : isEven}" class="w-5"> {{i+1}} </td>
+                    </ng-container>
+
+                    <!-- Progress Column -->
+                    <ng-container matColumnDef="code">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-10"> CODE </th>
+                        <td mat-cell *matCellDef="let row, let isOdd = odd, let isEven = even"
+                        [ngClass]="{'bg-odd' : isOdd, 'bg-even' : isEven}" class="w-10"> {{row.code}} </td>
+                    </ng-container>
+
+                    <!-- Name Column -->
+                    <ng-container matColumnDef="designation">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-30"> DESIGNATION </th>
+                        <td mat-cell *matCellDef="let row, let isOdd = odd, let isEven = even"
+                        [ngClass]="{'bg-odd' : isOdd, 'bg-even' : isEven}" class="w-30"> {{row.designation}} </td>
+                    </ng-container>
+
+                     <!-- Name Column -->
+                     <ng-container matColumnDef="financement">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-15"> FINANCEMENT </th>
+                        <td mat-cell *matCellDef="let row, let isOdd = odd, let isEven = even"
+                        [ngClass]="{'bg-odd' : isOdd, 'bg-even' : isEven}" class="w-15"> {{row.typeFinancement.type}} </td>
+                    </ng-container>
+
+                    <!-- Name Column -->
+                    <ng-container matColumnDef="montantMarche">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-15 mat-th-right"> MONTANT DU MARCHE </th>
+                        <td mat-cell *matCellDef="let row, let isOdd = odd, let isEven = even"
+                        [ngClass]="{'bg-odd' : isOdd, 'bg-even' : isEven}" class="w-15 mat-td-right"> {{numberFormat.format(row.montantGlobal)}} </td>
+                    </ng-container>
+
+                      <!-- Name Column -->
+                      <ng-container matColumnDef="statutMarche">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-20"> STATUT </th>
+                        <td mat-cell *matCellDef="let row, let isOdd = odd, let isEven = even"
+                        [ngClass]="{'bg-odd' : isOdd, 'bg-even' : isEven}" class="w-20"> 
+                            <span [ngClass]="{  'statut-enconstitution' : row.statutMarche.statut == 'EN COURS',
+                                                'statut-enetude' : row.statutMarche.statut == 'RECEPTION PROVISOIRE',
+                                                'statut-gagner' : row.statutMarche.statut == 'RECEPTION DEFINITIVE'}">
+                                {{row.statutMarche.statut}}
+                            </span> 
+                            </td>
+                    </ng-container>
+
+                    <!-- Action Column -->
+                    <ng-container matColumnDef="actions">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-10 mat-th-center"> ACTIONS </th>
+                        <td mat-cell *matCellDef="let row, let isOdd = odd, let isEven = even"
+                        [ngClass]="{'bg-odd' : isOdd, 'bg-even' : isEven}" class="w-10 mat-td-center">
+                            <button mat-mini-fab class="bg-03c0c8" (click)="onUpdate(row)">
+                                <mat-icon>create</mat-icon>
+                            </button>
+                            <button mat-mini-fab color="warn" (click)="openDialog(row)">
+                                <mat-icon>delete</mat-icon>
+                            </button>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                    <!-- Row shown when there is no matching data. -->
+                    <tr class="mat-row" *matNoDataRow>
+                        <td class="mat-cell" colspan="4">Pas de données contenant le mot clé "{{input.value}}"</td>
+                    </tr>
+                </table>
+                <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"></mat-paginator>
+            </div>
+        </div>
+    </div>
+</div>

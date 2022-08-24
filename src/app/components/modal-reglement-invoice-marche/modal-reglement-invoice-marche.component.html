@@ -1,0 +1,121 @@
+<div class="">
+    <div class="modal-header">
+        <h2 mat-dialog-title>INFORMATIONS SUR LA FACTURE N°4114414114</h2>
+    </div>
+    <mat-dialog-content class="mat-typography">
+        <div class="container-modal">
+            <!-- Les champs pour le formulaire-->
+            <div class="box-content">
+                <!-- Alert apres soumission-->
+                <div class="flex-grow-2">
+                    <mat-form-field appearance="outline" class="flex-grow-10">
+                        <mat-label>Date</mat-label>
+                        <input matInput [value]="data.invoice.dateCreated | date: 'dd-MM-yyyy'" readonly>
+                    </mat-form-field>
+                </div>
+                <div class="flex-grow-4">
+                    <mat-form-field appearance="outline" class="flex-grow-10">
+                        <mat-label>Reference</mat-label>
+                        <input matInput [value]="data.invoice.reference" readonly>
+                    </mat-form-field>
+                </div>
+                <div class="flex-grow-2">
+                    <mat-form-field appearance="outline" class="flex-grow-10">
+                        <mat-label>Montant Global</mat-label>
+                        <input matInput [value]="numberFormat.format(data.invoice.netAPayer)+ ' FCFA' " readonly
+                            class="text-align-right">
+                    </mat-form-field>
+                </div>
+                <div class="flex-grow-2">
+                    <mat-form-field appearance="outline" class="flex-grow-10">
+                        <mat-label>Reste à payer</mat-label>
+                        <input matInput [value]="numberFormat.format(data.invoice.netAPayer - data.invoice.montantPaye)+ ' FCFA' " readonly
+                            class="text-align-right">
+                    </mat-form-field>
+                </div>
+                <div class="flex-grow-5">
+                    <mat-form-field appearance="outline" class="flex-grow-10">
+                        <mat-label>Marché</mat-label>
+                        <input matInput [value]="data.invoice.marche.code + '-' + data.invoice.marche.code" readonly>
+                    </mat-form-field>
+                </div>
+
+                <div class="flex-grow-5">
+                    <mat-form-field appearance="outline" class="flex-grow-10">
+                        <mat-label>Client</mat-label>
+                        <input matInput readonly [value]="data.invoice.marche.dao.tiers.numero + ' - ' + data.invoice.marche.dao.tiers.intitule">
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+    </mat-dialog-content>
+</div>
+<div class="m-t-30">
+    <div class="modal-header">
+        <h2 mat-dialog-title>REGLEMENT DE LA FACTURE</h2>
+    </div>
+    <mat-dialog-content class="mat-typography">
+        <div class="container-modal">
+            <!-- Les champs pour le formulaire-->
+            
+            <form [formGroup]="reglementForm">
+                <div class="box-content">
+                    <!-- Alert apres soumission-->
+                    <app-alert [typeAlert]=typeMsg [msgAlert]=msg class="flex-grow-10" *ngIf="typeMsg"></app-alert>
+                    <div class="flex-grow-2">
+                        <mat-form-field appearance="outline" class="flex-grow-10">
+                            <mat-label>Date</mat-label>
+                            <input matInput [matDatepicker]="picker" formControlName="dateReg">
+                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker #picker></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="flex-grow-2">
+                        <mat-form-field appearance="outline" class="flex-grow-10">
+                            <mat-label>Montant dû</mat-label>
+                            <input matInput [value]="numberFormat.format(data.invoice.netAPayer - data.invoice.montantPaye)" readonly
+                                class="text-align-right">
+                        </mat-form-field>
+                    </div>
+                    <div class="flex-grow-2">
+                        <mat-form-field appearance="outline" class="flex-grow-10">
+                            <mat-label>Montant réglé</mat-label>
+                            <input matInput type="number" formControlName="montantReg">
+                        </mat-form-field>
+                    </div>
+                    <div class="flex-grow-4">
+                        <mat-form-field appearance="outline" class="flex-grow-10">
+                            <mat-label>Reference</mat-label>
+                            <input matInput oninput="this.value = this.value.toUpperCase()" formControlName="reference">
+                        </mat-form-field>
+                    </div>
+
+                    <div class="flex-grow-5">
+                        <mat-form-field appearance="outline" class="flex-grow-10">
+                            <mat-label>Mode de règlement</mat-label>
+                            <mat-select [compareWith]="compareFn" formControlName="modeReglement">
+                                <mat-option *ngFor="let modereglement of listModeReglemnt" [value]="modereglement" >
+                                    {{modereglement.intitule}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="flex-grow-5">
+                        <mat-form-field appearance="outline" class="flex-grow-10">
+                            <mat-label>Autres informations</mat-label>
+                            <input matInput oninput="this.value = this.value.toUpperCase()" formControlName="autresInfo">
+                        </mat-form-field>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </mat-dialog-content>
+</div>
+
+
+<mat-dialog-actions align="end">
+    <button mat-button class="bg-primary" (click)="reglerFacture(reglementForm.value)" [disabled]="!reglementForm.valid">VALIDER</button>
+    <button mat-button mat-dialog-close class="bg-secondary">QUITTER</button>
+</mat-dialog-actions>

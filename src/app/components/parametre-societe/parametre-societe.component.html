@@ -1,0 +1,269 @@
+<div class="wrapper1">
+    <div class="flex-row-space-between">
+        <span class="titre-formulaire">
+            PARAMETRES SOCIETE</span>
+        <div class="flex-row-space-between">
+            <button mat-flat-button class="bg-secondary">
+                <mat-icon>autorenew</mat-icon>
+                ACTUALISER
+            </button>
+        </div>
+    </div>
+
+    <div class="content-paramater">
+        <mat-tab-group class="w-inherit">
+            <mat-tab label="INFORMATIONS GENERALES">
+                <form [formGroup]="societeForm" (ngSubmit)="saveSociete(societeForm.value)">
+                    <!-- Les champs pour le formulaire-->
+                    <div class="containner-input">
+                        <!-- Alert apres soumission-->
+                        <app-alert [typeAlert]=typeMsg [msgAlert]=msg class="w-inherit" *ngIf="typeMsg"></app-alert>
+                        <div class="flex-grow-5">
+                            <mat-form-field appearance="outline" class="flex-grow-10">
+                                <mat-label>Raison sociale</mat-label>
+                                <input matInput formControlName="raisonSociale"
+                                    oninput="this.value = this.value.toUpperCase()">
+                            </mat-form-field>
+                        </div>
+                        <div class="flex-grow-3">
+                            <mat-form-field appearance="outline" class="flex-grow-10">
+                                <mat-label>RCCM</mat-label>
+                                <input matInput formControlName="rccm" oninput="this.value = this.value.toUpperCase()">
+                            </mat-form-field>
+                        </div>
+                        <div class="flex-grow-2">
+                            <mat-form-field appearance="outline" class="flex-grow-10">
+                                <mat-label>Date de création</mat-label>
+                                <input matInput [matDatepicker]="picker2" formControlName="dateCreation">
+                                <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                                <mat-datepicker #picker2></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                        <div class="flex-grow-3">
+                            <mat-form-field appearance="outline" class="flex-grow-10">
+                                <mat-label>IFU</mat-label>
+                                <input matInput formControlName="ifu" oninput="this.value = this.value.toUpperCase()">
+                            </mat-form-field>
+                        </div>
+                        <div class="flex-grow-3">
+                            <mat-form-field appearance="outline" class="flex-grow-10">
+                                <mat-label>Nature activité</mat-label>
+                                <mat-select formControlName="natureActivite" [compareWith]="compareFn">
+                                    <mat-option *ngFor="let list of listNatureActivite" [value]="list.value">
+                                        {{list.value}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="flex-grow-4">
+                            <mat-form-field appearance="outline" class="flex-grow-10">
+                                <mat-label>Régime</mat-label>
+                                <mat-select formControlName="regime" [compareWith]="compareFn">
+                                    <mat-option *ngFor="let list of listRegime" [value]="list.value">
+                                        {{list.value}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="flex-grow-5">
+                            <mat-form-field appearance="outline" class="flex-grow-10">
+                                <mat-label>Activité principale</mat-label>
+                                <input matInput formControlName="activitePrincipale"
+                                    oninput="this.value = this.value.toUpperCase()">
+                            </mat-form-field>
+                        </div>
+                        <div class="flex-grow-5">
+                            <mat-form-field appearance="outline" class="flex-grow-10">
+                                <mat-label>Activité secondaire</mat-label>
+                                <input matInput formControlName="activiteSecondaire"
+                                    oninput="this.value = this.value.toUpperCase()">
+                            </mat-form-field>
+                        </div>
+                        <div class="flex-grow-2">
+                            <mat-form-field appearance="outline" class="flex-grow-10">
+                                <mat-label>Forme juridique</mat-label>
+                                <mat-select formControlName="formeJuridique" [compareWith]="compareFn">
+                                    <mat-option *ngFor="let list of listFormeJuridique" [value]="list.value">
+                                        {{list.value}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="flex-grow-6">
+                            <mat-form-field appearance="outline" class="flex-grow-10">
+                                <mat-label>Adresse</mat-label>
+                                <input matInput formControlName="adresse"
+                                    oninput="this.value = this.value.toUpperCase()">
+                            </mat-form-field>
+                        </div>
+                        <div class="flex-grow-2">
+                            <mat-form-field appearance="outline" class="flex-grow-10">
+                                <mat-label>Téléphone N°1</mat-label>
+                                <input matInput formControlName="tel1" oninput="this.value = this.value.toUpperCase()">
+                            </mat-form-field>
+                        </div>
+                        <div class="flex-grow-2">
+                            <mat-form-field appearance="outline" class="flex-grow-10">
+                                <mat-label>Téléphone N°1</mat-label>
+                                <input matInput formControlName="tel2" oninput="this.value = this.value.toUpperCase()">
+                            </mat-form-field>
+                        </div>
+                        <div class="flex-grow-3">
+                            <mat-form-field appearance="outline" class="flex-grow-10">
+                                <mat-label>Email</mat-label>
+                                <input matInput formControlName="email" oninput="this.value = this.value.toUpperCase()">
+                            </mat-form-field>
+                        </div>
+                        <div class="flex-grow-3">
+                            <mat-form-field appearance="outline" class="flex-grow-10">
+                                <mat-label>Site internet</mat-label>
+                                <input matInput formControlName="siteInternet"
+                                    oninput="this.value = this.value.toUpperCase()">
+                            </mat-form-field>
+                        </div>
+                        <div class="flex-grow-2">
+                            <mat-form-field appearance="outline" class="flex-grow-10">
+                                <mat-label>Capital</mat-label>
+                                <input matInput formControlName="capital"
+                                 type="number">
+                            </mat-form-field>
+                        </div>
+                        <button mat-flat-button class="bg-primary" [disabled]="!societeForm.valid">
+                            <mat-icon>save</mat-icon>
+                            SAUVEGARDER
+                        </button>
+                    </div>
+                </form>
+            </mat-tab>
+            <mat-tab label="PARAMETRES DE DONNEES">
+                <div class="config-data">
+                    <button mat-flat-button color="primary" (click)=" onDisplayModalPieceDao()">Ajouter une pièce DAO</button>
+                </div>
+            </mat-tab>
+            <mat-tab label="PARAMETRES MECeF">
+                <form [formGroup]="mecefForm" (ngSubmit)="save(mecefForm.value)">
+                    <!-- Les champs pour le formulaire-->
+                    <div class="containner-input">
+                        <!-- Alert apres soumission-->
+                        <app-alert [typeAlert]=typeMsg [msgAlert]=msg class="w-inherit" *ngIf="typeMsg"></app-alert>
+                        <div class="flex-grow-2">
+                            <mat-form-field appearance="outline" class="flex-grow-10">
+                                <mat-label>NIM</mat-label>
+                                <input matInput formControlName="nim" oninput="this.value = this.value.toUpperCase()">
+                            </mat-form-field>
+                        </div>
+                        <div class="flex-grow-4">
+                            <mat-form-field appearance="outline" class="flex-grow-10">
+                                <mat-label>Adresse</mat-label>
+                                <input matInput formControlName="adresse"
+                                    oninput="this.value = this.value.toUpperCase()">
+                            </mat-form-field>
+                        </div>
+                        <div class="flex-grow-4">
+                            <mat-form-field appearance="outline" class="flex-grow-10">
+                                <mat-label>Contact</mat-label>
+                                <input matInput formControlName="contact"
+                                    oninput="this.value = this.value.toUpperCase()">
+                            </mat-form-field>
+                        </div>
+                        <div class="flex-grow-2">
+                            <mat-form-field appearance="outline" class="flex-grow-10">
+                                <mat-label>Date Exp</mat-label>
+                                <input matInput [matDatepicker]="picker1" formControlName="dateExpJwt">
+                                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                                <mat-datepicker #picker1></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                        <div class="flex-grow-7">
+                            <mat-form-field appearance="outline" class="flex-grow-10">
+                                <mat-label>API MECeF URL</mat-label>
+                                <input matInput formControlName="urlApiMECEF">
+                            </mat-form-field>
+                        </div>
+                        <div class="flex-grow-1">
+                            <mat-form-field appearance="outline" class="flex-grow-10">
+                                <mat-label>ETAT</mat-label>
+                                <input matInput formControlName="etat" oninput="this.value = this.value.toUpperCase()">
+                            </mat-form-field>
+                        </div>
+
+                        <div class="flex-grow-10">
+                            <mat-form-field class="example-full-width flex-grow-10" appearance="outline">
+                                <mat-label>JWT Token</mat-label>
+                                <textarea matInput placeholder="Renseignez ici le jwt-token" formControlName="jwtToken"
+                                    style="min-height: 200px;"></textarea>
+                            </mat-form-field>
+                        </div>
+                        <button mat-flat-button class="bg-primary" [disabled]="!mecefForm.valid">
+                            <mat-icon>save</mat-icon>
+                            SAUVEGARDER
+                        </button>
+                    </div>
+                </form>
+            </mat-tab>
+        </mat-tab-group>
+    </div>
+</div>
+
+
+<!-- Modal pour ajouter une pièce dao-->
+<div class="modal-generate-container">
+    <div class="modal-piece-dao-overlay" (click)="onDisplayModalPieceDao()"></div>
+    <div class="modal-piece-dao-content bg-modalpiece-jointe">
+        <form [formGroup]="pieceDaoForm">
+            <div class="border-bottom-1px flex-grow-10 m-b-10">
+                <span class="title-modal color-title-piece-jointe">
+                    <mat-icon> attach_file</mat-icon>
+                    AJOUTER UNE NOUVELLE PIECE
+                </span>
+            </div>
+            <div class="p-10">
+                <app-alert [typeAlert]=typeMsg [msgAlert]=msg class="w-inherit" *ngIf="typeMsg"></app-alert>
+                <p class=""> Renseignez les informations ci-dessous pour ajouter une nouvelle pièce</p>
+                <div class="tax-container">
+                    <div class="flex-grow-10">
+                        <mat-form-field class="flex-grow-10" appearance="outline">
+                            <mat-label>Code</mat-label>
+                            <input matInput formControlName="code">
+                        </mat-form-field>
+                        <div *ngIf="pieceDaoForm.controls['code'].invalid && 
+                        (pieceDaoForm.controls['code'].touched || pieceDaoForm.controls['code'].dirty)">
+                            <p *ngIf="pieceDaoForm.controls['code'].errors!['required']" class="color-red">
+                                La code est obligatoire
+                            </p>
+                            <p *ngIf="pieceDaoForm.controls['code'].errors!['maxlength']" class="color-red">
+                                La taille du code ne doit excéder 10 caractères.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="flex-grow-10">
+                        <mat-form-field class="flex-grow-10" appearance="outline">
+                            <mat-label>Désignation</mat-label>
+                            <input matInput formControlName="designation">
+                        </mat-form-field>
+                        <div *ngIf="pieceDaoForm.controls['designation'].invalid && 
+                        (pieceDaoForm.controls['designation'].touched || pieceDaoForm.controls['designation'].dirty)">
+                            <p *ngIf="pieceDaoForm.controls['designation'].errors!['required']" class="color-red">
+                                La désignation est obligatoire
+                            </p>
+                            <p *ngIf="pieceDaoForm.controls['designation'].errors!['maxlength']" class="color-red">
+                                La taille de la désignation ne doit excéder 100 caractères.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="border-top-1px flex-grow-10">
+                <div class=" btn-container-modal">
+                    <button mat-flat-button class=" flex-grow-5 bg-secondary" (click)="onDisplayModalPieceDao()">
+                        FERMER
+                    </button>
+                    <button mat-flat-button color="primary" class="bg-primary flex-grow-5" (click)="addPieceDao(pieceDaoForm.value)"
+                       [disabled]="!pieceDaoForm.valid">
+                        ENREGISTRER
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

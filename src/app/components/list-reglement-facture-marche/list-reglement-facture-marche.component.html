@@ -1,0 +1,143 @@
+<div class="wrapper1">
+    <div class="flex-row-space-between">
+        <div class="">
+            <div class="titre-formulaire m-t-30">REGLEMENTS CLIENTS</div>
+        </div>
+        <div class="flex-row-space-between">
+            <div class="flex-row-space-between m-r-10 elm-option bg-50b776">
+                <mat-icon>check_box</mat-icon>
+                <div class="option-title">FACT.SOLD : </div>
+                <div class="value-element">{{numberFormat.format(countPayeeEnt)}}</div>
+            </div>
+            <div class="flex-row-space-between m-r-10 elm-option bg-38839d">
+                <mat-icon>subtitles</mat-icon>
+                <div class="option-title">PAYEES.PART : </div>
+                <div class="value-element">{{numberFormat.format(countPayeePart)}}</div>
+            </div>
+            <div class="flex-row-space-between m-r-10 elm-option bg-955c9fd4">
+                <mat-icon> dialpad</mat-icon>
+                <div class="option-title">NON.PAYEES : </div>
+                <div class="value-element">{{numberFormat.format(countNonPayee)}}</div>
+            </div>
+            <div class="m-r-10" id="select-statut">
+                <mat-form-field appearance="outline" class="">
+                    <mat-label>Statut</mat-label>
+                    <mat-select [compareWith]="compareFn" [(ngModel)]="statutChoice">
+                        <mat-option *ngFor="let statut of listStatut" [value]="statut.value">
+                            {{statut.value}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="m-r-10" id="select-statut">
+                <mat-form-field appearance="outline" class="">
+                    <mat-label>Client</mat-label>
+                    <mat-select [compareWith]="compareFn" [(ngModel)]="clientChoice">
+                        <mat-option *ngFor="let list of listClient" [value]="list.id">
+                            {{list.numero}} {{list.intitule}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <button mat-flat-button class="bg-primary" (click)="refresh()">
+                VALIDER
+            </button>
+        </div>
+
+    </div>
+
+    <div class="container-formulaire">
+        <div class="containner-list-element search">
+            <mat-form-field appearance="standard">
+                <mat-label>Rechercher</mat-label>
+                <input matInput (keyup)="applyFilter($event)" #input>
+            </mat-form-field>
+
+            <div class="mat-elevation-z8 w-inherit">
+                <table mat-table [dataSource]="dataSource" matSort>
+
+                    <!-- ID Column -->
+                    <ng-container matColumnDef="#">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-5"> # </th>
+                        <td mat-cell *matCellDef="let row, let i = index, let isOdd = odd, let isEven = even"
+                            [ngClass]="{'bg-odd' : isOdd, 'bg-even' : isEven}" class="w-5"> {{i+1}} </td>
+                    </ng-container>
+
+                    <!-- Progress Column -->
+                    <ng-container matColumnDef="date">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-10"> DATE </th>
+                        <td mat-cell *matCellDef="let row, let isOdd = odd, let isEven = even"
+                            [ngClass]="{'bg-odd' : isOdd, 'bg-even' : isEven}" class="w-10"> {{row.dateCreated |
+                            date : 'dd-MM-yyyy'}} </td>
+                    </ng-container>
+
+                    <!-- Name Column -->
+                    <ng-container matColumnDef="reference" class="">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-10"> REFERENCE </th>
+                        <td mat-cell *matCellDef="let row, let isOdd = odd, let isEven = even"
+                            [ngClass]="{'bg-odd' : isOdd, 'bg-even' : isEven}" class="w-10"> {{row.reference}} </td>
+                    </ng-container>
+
+                    <!-- Name Column -->
+                    <ng-container matColumnDef="montant" class="currency">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-10 mat-th-right"> MONTANT </th>
+                        <td mat-cell *matCellDef="let row, let isOdd = odd, let isEven = even"
+                            [ngClass]="{'bg-odd' : isOdd, 'bg-even' : isEven}" class="w-10 mat-td-right">
+                            {{numberFormat.format(row.montantNetTTC)}} </td>
+                    </ng-container>
+
+                     <!-- Name Column -->
+                     <ng-container matColumnDef="reste" class="currency">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-10 mat-th-right"> RESTE </th>
+                        <td mat-cell *matCellDef="let row, let isOdd = odd, let isEven = even"
+                            [ngClass]="{'bg-odd' : isOdd, 'bg-even' : isEven}" class="w-10 mat-td-right">
+                            {{numberFormat.format(row.netAPayer - row.montantPaye)}} </td>
+                    </ng-container>
+
+                    <!-- Name Column -->
+                    <ng-container matColumnDef="statut">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header  class="w-15"> STATUT </th>
+                        <td mat-cell *matCellDef="let row, let isOdd = odd, let isEven = even"
+                            [ngClass]="{'bg-odd' : isOdd, 'bg-even' : isEven}" class="w-15">
+                            <span [ngClass]="{  'statut-rejeter' : row.statut == 'NON PAYEE',
+                                                'statut-enetude' : row.statut == 'ENTIEREMENT PAYEE',
+                                                'statut-gagner' : row.statut == 'PARTIELLEMENT PAYEE'}">
+                                {{row.statut}}
+                            </span>
+                        </td>
+                    </ng-container>
+
+                    <!-- Name Column -->
+                    <ng-container matColumnDef="marche">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-30"> MARCHE </th>
+                        <td mat-cell *matCellDef="let row, let isOdd = odd, let isEven = even"
+                            [ngClass]="{'bg-odd' : isOdd, 'bg-even' : isEven}" class="w-30">
+                            {{row.marche.code}}-{{row.marche.designation}} </td>
+                    </ng-container>
+
+                    <!-- Action Column -->
+                    <ng-container matColumnDef="actions">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-10"> ACTIONS </th>
+                        <td mat-cell *matCellDef="let row, let isOdd = odd, let isEven = even"
+                            [ngClass]="{'bg-odd' : isOdd, 'bg-even' : isEven}" class="w-10">
+                            <button mat-mini-fab class="bg-03c0c8" (click)="openDialog(row)" *ngIf="row.statut != 'ENTIEREMENT PAYEE'">
+                                <mat-icon>kitchen</mat-icon>
+                            </button>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                    <!-- Row shown when there is no matching data. -->
+                    <tr class="mat-row" *matNoDataRow>
+                        <td class="mat-cell" colspan="4">Pas de données contenant le mot clé "{{input.value}}"</td>
+                    </tr>
+                </table>
+                <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users">
+                </mat-paginator>
+            </div>
+        </div>
+    </div>
+
+</div>

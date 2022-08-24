@@ -1,0 +1,81 @@
+<div class="wrapper1">
+    <div class="flex-row-space-between">
+        <span class="titre-formulaire">
+            MON COMPTE</span>
+    </div>
+
+    <div class="content-paramater">
+        <form [formGroup]="profilForm" (ngSubmit)="save(profilForm.value)">
+            <!-- Les champs pour le formulaire-->
+            <div class="containner-input">
+                <!-- Alert apres soumission-->
+                <app-alert [typeAlert]=typeMsg [msgAlert]=msg class="w-inherit" *ngIf="typeMsg"></app-alert>
+                <div class="flex-grow-2">
+                    <mat-form-field appearance="outline" class="flex-grow-10">
+                        <mat-label>Nom d'utilisateur</mat-label>
+                        <input matInput formControlName="userName" oninput="this.value = this.value.toUpperCase()">
+                    </mat-form-field>
+                </div>
+                <div class="flex-grow-3">
+                    <mat-form-field appearance="outline" class="flex-grow-10">
+                        <mat-label>Nom</mat-label>
+                        <input matInput formControlName="nom" oninput="this.value = this.value.toUpperCase()">
+                    </mat-form-field>
+                </div>
+                <div class="flex-grow-5">
+                    <mat-form-field appearance="outline" class="flex-grow-10">
+                        <mat-label>Prenoms</mat-label>
+                        <input matInput formControlName="prenoms" oninput="this.value = this.value.toUpperCase()">
+                    </mat-form-field>
+                </div>
+                <div class="flex-grow-6">
+                    <mat-form-field appearance="outline" class="flex-grow-10">
+                        <mat-label>Email</mat-label>
+                        <input matInput formControlName="email">
+                    </mat-form-field>
+                </div>
+                <div class="flex-grow-2">
+                    <mat-form-field appearance="outline" class="flex-grow-10">
+                        <mat-label>Téléphone N°1</mat-label>
+                        <input matInput formControlName="telephone1" oninput="this.value = this.value.toUpperCase()">
+                    </mat-form-field>
+                </div>
+                <div class="flex-grow-2">
+                    <mat-form-field appearance="outline" class="flex-grow-10">
+                        <mat-label>Téléphone N°2</mat-label>
+                        <input matInput formControlName="telephone2" oninput="this.value = this.value.toUpperCase()">
+                    </mat-form-field>
+                </div>
+                <div class="flex-grow-5">
+                    <mat-form-field appearance="outline" class="flex-grow-10">
+                        <mat-label>Adresse</mat-label>
+                        <input matInput formControlName="adresse">
+                    </mat-form-field>
+                </div>
+                <div class="flex-grow-3">
+                    <mat-form-field appearance="outline" class="flex-grow-10">
+                        <mat-label>Ville</mat-label>
+                        <input matInput formControlName="ville" oninput="this.value = this.value.toUpperCase()">
+                    </mat-form-field>
+                </div>
+                <div class="flex-grow-2">
+                    <mat-form-field appearance="outline" class="flex-grow-10">
+                        <mat-label>Pays</mat-label>
+                        <input matInput formControlName="pays" oninput="this.value = this.value.toUpperCase()">
+                    </mat-form-field>
+                </div>
+                <div class="flex-grow-10">
+                    <mat-form-field class="example-full-width flex-grow-10" appearance="outline">
+                        <mat-label>Autres Informations</mat-label>
+                        <textarea matInput placeholder="Renseignez ici d'autres Informations" formControlName="autresInfos"
+                            style="min-height: 150px;"></textarea>
+                    </mat-form-field>
+                </div>
+                <button mat-flat-button class="bg-primary" [disabled]="!profilForm.valid">
+                    <mat-icon>save</mat-icon>
+                    SAUVEGARDER
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,22 @@
+<div class="" *ngIf="typeAlert">
+    <div class="alert-container"
+      [ngClass]="{'bg-alert-error': titleAlert === 'Erreur', 'bg-alert-success': titleAlert === 'Succès' }">
+      <div class="flex-col">
+        <div class=""
+          [ngClass]="{'title-alert-error': titleAlert === 'Erreur', 'title-alert-success': titleAlert === 'Succès' }">
+          <mat-icon class="w-30"> {{titleAlert == 'Erreur' ? 'highlight_off' : 'check_circle_outline'}}</mat-icon>
+          <span>
+            {{titleAlert}}
+          </span>
+        </div>
+        <p class="body-alert">
+         {{msgAlert}}
+        </p>
+      </div>
+      <button mat-icon-button (click)="typeAlert=''">
+        <mat-icon
+          [ngClass]="{'title-alert-error': titleAlert === 'Erreur', 'title-alert-success': titleAlert === 'Succès' }">
+          close</mat-icon>
+      </button>
+    </div>
+  </div>
