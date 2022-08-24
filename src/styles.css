@@ -559,7 +559,7 @@ li a {
     flex-wrap: wrap-reverse;
 }
 
-table{
+.container-table{
     min-width: 1000px;
 }
 .menu {
